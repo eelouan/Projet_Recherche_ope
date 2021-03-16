@@ -17,7 +17,7 @@ public class FileReader {
 		int nbFournisseurs = 0;
 		int nbClients = 0;
 		List<Fournisseur> listeFournisseurs;
-		Path path = Paths.get("D:/FileReader/B1.1");
+		Path path = Paths.get(args[0]);
 	    
 		try(BufferedReader reader = Files.newBufferedReader(path)) {
 			
