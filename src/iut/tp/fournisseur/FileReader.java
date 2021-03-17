@@ -36,16 +36,7 @@ public class FileReader {
 			for(int i =0; i<nbFournisseurs; i++) {
 				String ligneFournisseur = reader.readLine();
 				listeFournisseurs.add(traiterLigneFournisseur(ligneFournisseur, nbClients));
-			}	
-			
-			System.out.println("Les " + nbFournisseurs + " fournisseurs ont été traités.");
-			
-			// Exemples de traitements
-			
-			// 1 -  Recupération du numero du premier fournisseur de la liste
-			System.out.println("\nEXEMPLE 1");	
-			System.out.println("Le numéro du premier fournisseur est " + listeFournisseurs.get(0).getNumero());	
-			
+			}
 			
 			// 2 -  cout client minimal et maximal pour chaque fournisseur
 			System.out.println("\nEXEMPLE 2");	
