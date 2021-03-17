@@ -10,16 +10,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class FileReader {
-
-	public static void main(String[] args) {	
-		
-		String nomFichier = null;
-		int nbFournisseurs = 0;
-		int nbClients = 0;
-		List<Fournisseur> listeFournisseurs;
-		Path path = Paths.get(args[0]);
+	
+	private List<Fournisseur> listeFournisseurs;
+	public String nomFichier = null;
+	public int nbFournisseurs = 0;
+	public int nbClients = 0;
+	
+	public FileReader(String args) {
+		Path path = Paths.get(args);
 	    
-		try(BufferedReader reader = Files.newBufferedReader(path)) {
+try(BufferedReader reader = Files.newBufferedReader(path)) {
 			
 			// Lecture premiere ligne : nom fichier
 			nomFichier = reader.readLine();
@@ -73,7 +73,7 @@ public class FileReader {
 			System.out.println("Erreur d'accès au fichier spécifié");
 		}	
 	}
-	
+		
 	/**
 	 * Traiter une ligne fournisseur. 
 	 * Renvoie l'objet Fournisseur correspondant à la ligne.
@@ -82,7 +82,7 @@ public class FileReader {
 	 * @param nbClients the nb clients
 	 * @return the fournisseur
 	 */
-	private static Fournisseur traiterLigneFournisseur(String ligneFournisseur, int nbClients) {
+	private Fournisseur traiterLigneFournisseur(String ligneFournisseur, int nbClients) {
 		 String[] tableauFournisseur = ligneFournisseur.split(" ");
 		 
 		 // Instanciation fournisseur
