@@ -34,5 +34,9 @@ public class Fournisseur {
 	public void setListeCoutsClients(List<Integer> listeCoutsClients) {
 		this.listeCoutsClients = listeCoutsClients;
 	}	
+	
+	public String toString(int i) {
+		return "" + this.listeCoutsClients.get(i);
+	}
 
 }

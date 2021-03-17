@@ -23,7 +23,7 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 			
 			// Lecture premiere ligne : nom fichier
 			nomFichier = reader.readLine();
-			System.out.println("Le nom du fichier est : " + nomFichier);
+//			System.out.println("Le nom du fichier est : " + nomFichier);
 			
 			// Lecture seconde ligne : nbFournisseurs et nbClients
 			String secondeLigne = reader.readLine();
@@ -39,22 +39,22 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 			}
 			
 			// 2 -  cout client minimal et maximal pour chaque fournisseur
-			System.out.println("\nEXEMPLE 2");	
+//			System.out.println("\nEXEMPLE 2");	
 			for(Fournisseur fournisseur : listeFournisseurs) {
 				Integer coutMinimal = Collections.min(fournisseur.getListeCoutsClients());
-				System.out.println("Le cout client minimal pour le fournisseur " + fournisseur.getNumero() + " est " + coutMinimal);	
+//				System.out.println("Le cout client minimal pour le fournisseur " + fournisseur.getNumero() + " est " + coutMinimal);	
 				Integer coutMaximal = Collections.max(fournisseur.getListeCoutsClients());
-				System.out.println("Le cout client maximal pour le fournisseur " + fournisseur.getNumero() + " est " + coutMaximal);	
+//				System.out.println("Le cout client maximal pour le fournisseur " + fournisseur.getNumero() + " est " + coutMaximal);	
 			}
 			
 			// 3 - Affichier le coût du troisième client pour tous les fournisseurs
-			System.out.println("\nEXEMPLE 3");	
+//			System.out.println("\nEXEMPLE 3");	
 			for(Fournisseur fournisseur : listeFournisseurs) {
-				System.out.println("Le coût pour le troisième client est " + fournisseur.getListeCoutsClients().get(2));	
+//				System.out.println("Le coût pour le troisième client est " + fournisseur.getListeCoutsClients().get(2));	
 			}
 			
 			// 4 - Quel est le fournisseur qui a le coût client minimal pour le troisième client
-			System.out.println("\nEXEMPLE 4");	
+//			System.out.println("\nEXEMPLE 4");	
 			// Liste de travail de tou sles couts pour le troisieme client
 			List<Integer> listeCoutsTroisiemeClient = new ArrayList<Integer>(nbFournisseurs);
 			
@@ -62,10 +62,10 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 				listeCoutsTroisiemeClient.add(fournisseur.getListeCoutsClients().get(2));
 			}
 			Integer coutMinimalClient = Collections.min(listeCoutsTroisiemeClient);
-			System.out.println("Le cout minimal pour le troisième client est " + coutMinimalClient);
+//			System.out.println("Le cout minimal pour le troisième client est " + coutMinimalClient);
 			
 			Integer indexFournisseurCoutMini = listeCoutsTroisiemeClient.indexOf(coutMinimalClient);
-			System.out.println("Le fournisseur numéro " + listeFournisseurs.get(indexFournisseurCoutMini).getNumero() + " a le coût minimal pour le troisieme client");
+//			System.out.println("Le fournisseur numéro " + listeFournisseurs.get(indexFournisseurCoutMini).getNumero() + " a le coût minimal pour le troisieme client");
 			
 			
 			    
@@ -75,30 +75,48 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 	}
 		
 	/**
-	 * Traiter une ligne fournisseur. 
-	 * Renvoie l'objet Fournisseur correspondant à la ligne.
-	 *
-	 * @param ligneFournisseur the ligne fournisseur
-	 * @param nbClients the nb clients
-	 * @return the fournisseur
-	 */
+	* Traiter une ligne fournisseur. 
+	* Renvoie l'objet Fournisseur correspondant à la ligne.
+	*
+	* @param ligneFournisseur the ligne fournisseur
+	* @param nbClients the nb clients
+	* @return the fournisseur
+	*/
 	private Fournisseur traiterLigneFournisseur(String ligneFournisseur, int nbClients) {
-		 String[] tableauFournisseur = ligneFournisseur.split(" ");
+		String[] tableauFournisseur = ligneFournisseur.split(" ");
 		 
-		 // Instanciation fournisseur
-		 Fournisseur fournisseur = new Fournisseur();
-		 // Renseignement des propriétés fixes numero et coutOuverture
-		 fournisseur.setNumero(Integer.parseInt(tableauFournisseur[0]));
-		 fournisseur.setCoutOuverture(Integer.parseInt(tableauFournisseur[1]));
-		 // Instanciation nouvelle liste
-		 fournisseur.setListeCoutsClients(new ArrayList<>(nbClients));
+		// Instanciation fournisseur
+		Fournisseur fournisseur = new Fournisseur();
+		// Renseignement des propriétés fixes numero et coutOuverture
+		fournisseur.setNumero(Integer.parseInt(tableauFournisseur[0]));
+		fournisseur.setCoutOuverture(Integer.parseInt(tableauFournisseur[1]));
+		// Instanciation nouvelle liste
+		fournisseur.setListeCoutsClients(new ArrayList<>(nbClients));
 		 
-		 // Renseignement de la liste de couts clients
-		 for(int i =2; i <= nbClients + 1; i++) {
+		// Renseignement de la liste de couts clients
+		for(int i =2; i <= nbClients + 1; i++) {
 			 fournisseur.getListeCoutsClients().add(Integer.parseInt(tableauFournisseur[i]));
-		 }		
+		}		
 		 
 		 return fournisseur;
+	}
+	
+	public ArrayList<Integer> eval() {
+		ArrayList<Integer> cout = new ArrayList<>();
+		for(Fournisseur f : listeFournisseurs) {
+			int coutMinimal = Collections.min(f.getListeCoutsClients());
+			coutMinimal += f.getCoutOuverture();
+			cout.add(coutMinimal);
+		}
+		return cout;
+	}
+	
+	public StringBuilder aff() {
+		StringBuilder sb = new StringBuilder();
+		for(int f : this.eval()) {
+			sb.append(" " + f);
+		}
+		return sb;
 	}
 
 }
