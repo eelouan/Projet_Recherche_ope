@@ -111,7 +111,7 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 		return cout;
 	}
 	
-	public ArrayList<Integer> evalBis(){
+	public ArrayList<Integer> evalBis(){//tableau d'eval de la q2
 		ArrayList<Integer> cout = new ArrayList<>();
 		int c = 0;
 		for(Fournisseur f : listeFournisseurs) {
@@ -138,33 +138,27 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 		return cout.get(nb);
 	}
 	
-	public void glouton() {
+	public void glouton() {//l'algo glouton de la q3
 		boolean over = true;
-		ArrayList<Integer> listI = new ArrayList<>();
-		ArrayList<Integer> tabEvalTmp = new ArrayList<>(this.evalBis());
-		ArrayList<Integer> coutClientsMin = new ArrayList<>();
-		ArrayList<Integer> minEval = new ArrayList<>();
+		ArrayList<Integer> listI = new ArrayList<>();//contient les num forunisseurs
+		ArrayList<Integer> tabEvalTmp = new ArrayList<>(this.evalBis());//contient les résultats eval
+		ArrayList<Integer> coutClientsMin = new ArrayList<>();// tableau des clients min 
+		ArrayList<Integer> minEval = new ArrayList<>();//contient toute les plus petite valeur 
 		int coutMinimal = 0;
 		int index = 0;
 		int king = 0;
 		int i = 0;
 		int coutMinimalF = 0;
-		int f1 = 0;
 		int evalTmp = 0;
-		int nb = 0;
-		for(int it = 0 ; it < this.evalBis().size() ; ++it) {
-			listI.add(it);
-		}
+
 		do {
-			coutMinimal = Collections.min(tabEvalTmp);
-			index = tabEvalTmp.indexOf(coutMinimal);
-			tabEvalTmp.remove(index);
-			nb = listeFournisseurs.get(i).getNumero();
-				f1 = listeFournisseurs.get(king).getCoutOuverture();
-				for(int u = 0 ; u < tabEvalTmp.size() ; ++u) {
-					Fournisseur f = listeFournisseurs.get(u);
-					if(f.getNumero() != listeFournisseurs.get(king).getNumero()) {
-						for(int k = 0 ; k < nbClients ; ++k) {
+			coutMinimal = Collections.min(tabEvalTmp);//on prend la plus petite eval de la liste
+			index = tabEvalTmp.indexOf(coutMinimal);//on prend le num forunisseur de l'eval min
+			tabEvalTmp.remove(index);//on supprimme pour faire les calculs
+				for(int u = 0 ; u < tabEvalTmp.size() ; ++u) { //une itération
+					Fournisseur f = listeFournisseurs.get(u);//on prend le num fournisseur dans le tableau
+					if(f.getNumero() != listeFournisseurs.get(king).getNumero()) {//if 
+						for(int k = 0 ; k < nbClients ; ++k) { //on incremente k tant que pas fais tout les fournisseurs
 							coutClientsMin.add(f.getListeCoutsClients().get(k));
 							coutClientsMin.add(listeFournisseurs.get(king).getListeCoutsClients().get(k));
 							coutMinimalF += Collections.min(coutClientsMin);
