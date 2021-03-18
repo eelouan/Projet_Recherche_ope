@@ -101,7 +101,7 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 		 return fournisseur;
 	}
 	
-	public ArrayList<Integer> eval() {
+	public ArrayList<Integer> evalTest() {
 		ArrayList<Integer> cout = new ArrayList<>();
 		for(Fournisseur f : listeFournisseurs) {
 			int coutMinimal = Collections.min(f.getListeCoutsClients());
@@ -111,12 +111,74 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 		return cout;
 	}
 	
-	public StringBuilder aff() {
-		StringBuilder sb = new StringBuilder();
-		for(int f : this.eval()) {
-			sb.append(" " + f);
+	public ArrayList<Integer> evalBis(){
+		ArrayList<Integer> cout = new ArrayList<>();
+		int c = 0;
+		for(Fournisseur f : listeFournisseurs) {
+			for(int i = 0 ; i < nbClients ; ++i) {
+				c += f.getListeCoutsClients().get(i);		
+			}
+			cout.add(f.getCoutOuverture() + c);
+			c = 0;
 		}
-		return sb;
+		return cout;
 	}
-
+	
+	public Integer eval(int nb){
+		ArrayList<Integer> cout = new ArrayList<>();
+		int c = 0;
+		for(Fournisseur f : listeFournisseurs) {
+			for(int i = 0 ; i < nbClients ; ++i) {
+				c += f.getListeCoutsClients().get(i);		
+			}
+//			System.out.println(f.getCoutOuverture() + c);
+			cout.add(f.getCoutOuverture() + c);
+			c = 0;
+		}
+		return cout.get(nb);
+	}
+	
+	public void glouton() {
+		boolean over = true;
+		ArrayList<Integer> listI = new ArrayList<>();
+		ArrayList<Integer> tabEvalTmp = new ArrayList<>(this.evalBis());
+		ArrayList<Integer> coutClientsMin = new ArrayList<>();
+		ArrayList<Integer> minEval = new ArrayList<>();
+		int coutMinimal = 0;
+		int index = 0;
+		int king = 0;
+		int i = 0;
+		int coutMinimalF = 0;
+		int f1 = 0;
+		int evalTmp = 0;
+		int nb = 0;
+		for(int it = 0 ; it < this.evalBis().size() ; ++it) {
+			listI.add(it);
+		}
+		do {
+			coutMinimal = Collections.min(tabEvalTmp);
+			index = tabEvalTmp.indexOf(coutMinimal);
+			tabEvalTmp.remove(index);
+			nb = listeFournisseurs.get(i).getNumero();
+				f1 = listeFournisseurs.get(king).getCoutOuverture();
+				for(int u = 0 ; u < tabEvalTmp.size() ; ++u) {
+					Fournisseur f = listeFournisseurs.get(u);
+					if(f.getNumero() != listeFournisseurs.get(king).getNumero()) {
+						for(int k = 0 ; k < nbClients ; ++k) {
+							coutClientsMin.add(f.getListeCoutsClients().get(k));
+							coutClientsMin.add(listeFournisseurs.get(king).getListeCoutsClients().get(k));
+							coutMinimalF += Collections.min(coutClientsMin);
+							coutClientsMin.clear();
+						}
+					}
+					evalTmp = listeFournisseurs.get(king).getCoutOuverture() + f.getCoutOuverture() + coutMinimalF;
+					coutMinimalF = 0;
+					minEval.add(evalTmp);
+				}
+				over = Collections.min(minEval) > listeFournisseurs.get(king).getCoutOuverture() ? true : false;
+				king = index;
+			++i;
+		}while(over && i < this.evalBis().size());
+		System.out.println("eval(O) : " + Collections.min(minEval) + " ; nombre d'iteration : " + nb);
+	}
 }
