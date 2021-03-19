@@ -13,7 +13,7 @@ public class Main {
 		System.out.println();
 		System.out.println("Algorithme glouton : ");
 		System.out.println();
-		f.jenaimarre();
+		f.glouton();
 //		System.out.println(f.eval(1));
 //		System.out.println(f.aff());
 //		System.out.println(f.evalBis());
