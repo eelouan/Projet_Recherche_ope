@@ -139,173 +139,57 @@ try(BufferedReader reader = Files.newBufferedReader(path)) {
 		}
 		return cout.get(nb);
 	}
-	
-	public void glouton() {//l'algo glouton de la q3
-		boolean over = true;
-		ArrayList<Integer> listI = new ArrayList<>();//contient les num forunisseurs
-		ArrayList<Integer> tabEvalTmp = new ArrayList<>(this.evalBis());//contient les résultats eval
-		ArrayList<Integer> coutClientsMin = new ArrayList<>();// tableau des clients min 
-		ArrayList<Integer> minEval = new ArrayList<>();//contient toute les plus petite valeur 
-		int coutMinimal = 0;
-		int index = 0;
-		int king = 0;
-		int i = 0;
-		int coutMinimalF = 0;
-		int evalTmp = 0;
 
-		do {
-			coutMinimal = Collections.min(tabEvalTmp);//on prend la plus petite eval de la liste
-			index = tabEvalTmp.indexOf(coutMinimal);//on prend le num forunisseur de l'eval min
-			tabEvalTmp.remove(index);//on supprimme pour faire les calculs
-				for(int u = 0 ; u < tabEvalTmp.size() ; ++u) { //une itération
-					Fournisseur f = listeFournisseurs.get(u);//on prend le num fournisseur dans le tableau
-					if(f.getNumero() != listeFournisseurs.get(king).getNumero()) {//if 
-						for(int k = 0 ; k < nbClients ; ++k) { //on incremente k tant que pas fais tout les fournisseurs
-							coutClientsMin.add(f.getListeCoutsClients().get(k));
-							coutClientsMin.add(listeFournisseurs.get(king).getListeCoutsClients().get(k));
-							coutMinimalF += Collections.min(coutClientsMin);
-							coutClientsMin.clear();
-						}
-					}
-					evalTmp = listeFournisseurs.get(king).getCoutOuverture() + f.getCoutOuverture() + coutMinimalF;
-					coutMinimalF = 0;
-					minEval.add(evalTmp);
-				}
-				over = Collections.min(minEval) > listeFournisseurs.get(king).getCoutOuverture() ? true : false;
-				king = index;
-			++i;
-		}while(over && i < this.evalBis().size());
-		System.out.println("eval(O) : " + Collections.min(minEval) + " ; nombre d'iteration : " + i);
-	}
-	
-	public void gloutonB() {
-		boolean over = true;
-		ArrayList<Integer> listI = new ArrayList<>();
-		ArrayList<Integer> tabEvalTmp = new ArrayList<>(this.evalBis());
-		ArrayList<Integer> coutClientsMin = new ArrayList<>();
-		ArrayList<Integer> minEval = new ArrayList<>();
-		int coutMinimal = 0;
-		int index = 0;
-		int king = 0;
-		int i = 0;
-		int coutTmp = 0;
-		int coutMinimalF = 0;
-		int evalTmp = 0;
-		for(int it = 0 ; it < nbFournisseurs ; ++it) {
-			listI.add(it);
-		}
-//		System.out.println(tabEvalTmp);
-		for(int c = 0 ; c < 2 ; ++c) {
-			
-//			minEval.clear();
-			coutMinimal = Collections.min(tabEvalTmp);
-			index = tabEvalTmp.indexOf(coutMinimal);
-		System.out.println(coutMinimal);
-			tabEvalTmp.remove(index);
-			listI.remove(index);
-			king = index;
-			minEval.clear();
-			System.out.println(listI);
-			for(int u = 0 ; u < this.evalBis().size() ; ++u) {
-				Fournisseur f = listeFournisseurs.get(u);
-				if(f.getNumero() != listeFournisseurs.get(index).getNumero()) {
-					for(int k = 0 ; k < nbClients ; ++k) {
-						coutClientsMin.add(f.getListeCoutsClients().get(k));
-						coutClientsMin.add(listeFournisseurs.get(king).getListeCoutsClients().get(k));
-//					System.out.println(coutClientsMin);
-						coutMinimalF = Collections.min(coutClientsMin);
-						coutTmp += coutMinimalF;
-//					System.out.println("cout :" + coutMinimalF);
-//					System.out.println(" " + coutTmp);
-						coutClientsMin.clear();
-					}
-//				System.out.println(coutTmp);
-//				System.out.println(listeFournisseurs.get(index).getCoutOuverture() + " " + f.getCoutOuverture());
-//					System.out.println(minEval);
-					evalTmp = listeFournisseurs.get(king).getCoutOuverture() + f.getCoutOuverture() + coutTmp;
-					coutTmp = 0;
-					minEval.add(evalTmp);
-				}
-			}
-			tabEvalTmp = minEval;
-			System.out.println(minEval);
-//			tabEvalTmp.clear();
-//		System.out.println(Collections.min(tabEvalTmp));
-//			minEval.clear();
-		}
-	}
-	
-	public void jenaimarre() {
-		ArrayList<Integer> listI = new ArrayList<>();
-		TreeMap<Integer, Integer> cf = new TreeMap<>();
+	/*
+	 * Algo calculant Eval(0) de façon optimal grace à la  méthode gloutonne
+	 */
+	public void glouton() {
+		ArrayList<Integer> listI = new ArrayList<>(); // Liste des fournisseurs restant
+		TreeMap<Integer, Integer> cf = new TreeMap<>(); // Liste associative de Eval
 		ArrayList<Integer> evalTmp = new ArrayList<>();
 		int coutMinimal = 0;
-		int min = 0;
+		int min = 0; // Sock le cout d'avant
 		int index = 0;
 		int coutMinimalF = 0;
 		int coutTmp = 0;
-//		int evalTmp = 0;
-		int king = 0;
-		int taille = 0;
 		int i = 0;
-		boolean over = true;
-		ArrayList<Integer> coutClientsMin = new ArrayList<>();
-		ArrayList<Integer> ind = new ArrayList<>();
-//		int index = tabEvalTmp.indexOf(coutMinimal);
-//		Fournisseur f = new Fournisseur();
-//		int coutF = f.getCoutOuverture();
-//		System.out.println(coutMinarg1imal);
-		for(int it = 0 ; it < nbFournisseurs ; ++it) {
+		boolean over = true; // Variable de sortie de boucle  
+		ArrayList<Integer> coutClientsMin = new ArrayList<>(); // Contient Cij
+		for(int it = 0 ; it < nbFournisseurs ; ++it) { // Nous remplissons cf et listI
 			 cf.put(this.evalBis().get(it), it);
 			 listI.add(it);
 		}
 
 		min = Collections.min(this.evalBis());
-		do {
-			coutMinimal = i < 1 ? Collections.min(this.evalBis()) : Collections.min((evalTmp));
+		do { // Boucle de l'algo
+			coutMinimal = i < 1 ? Collections.min(this.evalBis()) : Collections.min((evalTmp)); // coutMinimal Prend le min de la liste this.evalBis() ou de evalTmp en fonction de l'iteration
 			evalTmp.clear();
-//			System.out.println(cf);
-			index = cf.get(coutMinimal);
-//			listI.remove(index);
-//			System.out.println(listI);
-//			taille = listI.size();
-//			king = index;
-			cf.clear();
-//			ind.add(index);
-//			cf.remove(coutMinimal);
-//			System.out.println(cf);
+			index = cf.get(coutMinimal); // index du coutMinimal -> donc le fournisseur i-1
+			cf.clear(); // on vide le contenue car il ne nous sert plus à rien
 			for(int u = 0 ; u < this.evalBis().size() ; ++u) {
 				Fournisseur f = listeFournisseurs.get(u);
-				if(f.getNumero() != listeFournisseurs.get(index).getNumero()) {
-					for(int k = 0 ; k < nbClients ; ++k) {
+				if(f.getNumero() != listeFournisseurs.get(index).getNumero()) { // Condition pour ne pas ajouter deux fois le fournisseur 
+					for(int k = 0 ; k < nbClients ; ++k) { // Parcours de tous les clients
 						coutClientsMin.add(f.getListeCoutsClients().get(k));
 						coutClientsMin.add(listeFournisseurs.get(index).getListeCoutsClients().get(k));
-//					System.out.println(coutClientsMin);
-						coutMinimalF = Collections.min(coutClientsMin);
-						coutTmp += coutMinimalF;
+						coutMinimalF = Collections.min(coutClientsMin); // Nous prenons le minimal de ces deux cout
+						coutTmp += coutMinimalF; // tous les couts minimals des clients sont ajouter et stock dans la variable coutTmp
 						coutClientsMin.clear();
-//						System.out.println(coutMinimalF);
 					}
-					evalTmp.add(listeFournisseurs.get(index).getCoutOuverture() + f.getCoutOuverture() + coutTmp);
-					cf.put(listeFournisseurs.get(index).getCoutOuverture() + f.getCoutOuverture() + coutTmp, listI.get(u));
+					evalTmp.add(listeFournisseurs.get(index).getCoutOuverture() + f.getCoutOuverture() + coutTmp); // Ajout de l'eval(i) dans evalTmp
+					cf.put(listeFournisseurs.get(index).getCoutOuverture() + f.getCoutOuverture() + coutTmp, listI.get(u)); // Ajout dans cf [eval(i),Fi]
 				}
 				coutTmp = 0;
 				
 			}
 
-//			System.out.println(cf);
-//			System.out.println(evalTmp);
-//			System.out.println(cf.);
 			++i;
-			if(min <= coutMinimal) {
+			if(min <= coutMinimal) { // Condition de fin de boucle
 				over = false;
 			} else {
 				min = coutMinimal;
-//				System.out.println(min);
-//				System.out.println(coutMinimal);
-//				System.out.println();
 			}
 		}while(over || i < nbFournisseurs);
-		System.out.println("Eval(O) : " + min);
+		System.out.println("Eval(O) : " + min); // min est le resultat	
 	}
 }
